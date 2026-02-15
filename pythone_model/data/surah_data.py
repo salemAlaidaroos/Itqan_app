@@ -26,3 +26,4 @@ surah_difficulty_map = {
 }
 
 surah_list = list(surah_difficulty_map.keys())
+
