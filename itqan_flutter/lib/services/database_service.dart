@@ -4,8 +4,15 @@ import '../models/surah_model.dart';
 class DatabaseService {
   final supabase = Supabase.instance.client;
 
-  Future<void> signUp({required String email, required String password}) async {
-    await supabase.auth.signUp(email: email, password: password);
+  Future<void> signUp(
+      {required String email,
+      required String password,
+      required String name}) async {
+    await supabase.auth.signUp(
+      email: email,
+      password: password,
+      data: {'full_name': name},
+    );
   }
 
   Future<void> login({required String email, required String password}) async {
