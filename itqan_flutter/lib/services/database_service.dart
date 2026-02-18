@@ -1,13 +1,15 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:quran/quran.dart' as quran;
 import '../models/surah_model.dart';
 
 class DatabaseService {
   final supabase = Supabase.instance.client;
 
-  Future<void> signUp(
-      {required String email,
-      required String password,
-      required String name}) async {
+  Future<void> signUp({
+    required String email,
+    required String password,
+    required String name,
+  }) async {
     await supabase.auth.signUp(
       email: email,
       password: password,
@@ -32,21 +34,36 @@ class DatabaseService {
         .from("surahs")
         .select()
         .eq('user_id', supabase.auth.currentUser!.id)
-        .order('page_number', ascending: true);
+        .order('created_at', ascending: false);
 
     List<SurahModel> surahList = [];
-
     for (var element in data) {
-      SurahModel s = SurahModel.fromMap(element);
-      surahList.add(s);
+      surahList.add(SurahModel.fromMap(element));
     }
-
     return surahList;
   }
 
-  Future<void> addSurah({required SurahModel surah}) async {
-    var dataToSend = surah.toMap();
-    dataToSend['user_id'] = supabase.auth.currentUser!.id;
+  Future<void> addSurah({
+    required int surahNumber,
+    required int startVerse,
+    required int endVerse,
+  }) async {
+    final user = supabase.auth.currentUser;
+    if (user == null) return;
+
+    int totalVersesToMemorize = endVerse - startVerse + 1;
+
+    final dataToSend = {
+      'user_id': user.id,
+      'name': quran.getSurahNameArabic(surahNumber),
+      'verse_count': totalVersesToMemorize,
+      'page_number': quran.getPageNumber(surahNumber, startVerse),
+      'mastery_level': 0,
+      'risk_score': 0.0,
+      'repetition_count': 0,
+      'last_review_date': DateTime.now().toIso8601String(),
+      'created_at': DateTime.now().toIso8601String(),
+    };
 
     await supabase.from("surahs").insert(dataToSend);
   }

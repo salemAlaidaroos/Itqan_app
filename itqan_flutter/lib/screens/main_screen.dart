@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import 'add_surah_screen.dart';
+import 'quran_index_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -13,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     const HomeScreen(),
-    const Center(child: Text("صفحة المصحف")),
+    const QuranIndexScreen(),
     const Center(child: Text("صفحة الإحصائيات")),
   ];
 
@@ -38,7 +40,12 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: _pages[_selectedIndex],
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddSurahScreen()),
+          );
+        },
         backgroundColor: const Color(0xFF0F2854).withOpacity(0.85),
         elevation: 2,
         child: const Icon(Icons.add, color: Colors.white),

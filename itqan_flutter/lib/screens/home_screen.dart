@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:itqan_flutter/screens/my_surahs_screen.dart';
 import '../widgets/stair_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -44,7 +44,12 @@ class HomeScreen extends StatelessWidget {
             icon: Icons.calendar_today,
             gradientColors: const [Color(0xFF1C4D8D), Color(0xFF4988C4)],
             widthPercent: 0.92,
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MySurahsScreen()),
+              );
+            },
           ),
         ),
         Expanded(
