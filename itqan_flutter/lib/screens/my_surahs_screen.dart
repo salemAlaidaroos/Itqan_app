@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:quran/quran.dart' as quran;
 import '../services/database_service.dart';
 import '../models/surah_model.dart';
 import 'surah_detail_screen.dart';
+import 'package:quran/quran.dart' as quran;
 
 class MySurahsScreen extends StatefulWidget {
   const MySurahsScreen({super.key});
@@ -13,6 +13,35 @@ class MySurahsScreen extends StatefulWidget {
 
 class _MySurahsScreenState extends State<MySurahsScreen> {
   final _db = DatabaseService();
+
+  void _deleteItem(int id) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("حذف الورد", textAlign: TextAlign.right),
+        content: const Text("هل أنت متأكد أنك تريد حذف هذا الورد نهائياً؟"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("إلغاء"),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              await _db.deleteSurah(id: id);
+              setState(() {});
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("تم الحذف بنجاح ")),
+                );
+              }
+            },
+            child: const Text("حذف", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,27 +68,38 @@ class _MySurahsScreenState extends State<MySurahsScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-
             if (snapshot.hasError) {
-              return Center(child: Text("في خطأ: ${snapshot.error}"));
+              return Center(child: Text("حدث خطأ: ${snapshot.error}"));
+            }
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return _buildEmptyState();
             }
 
-            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            final allSurahs = snapshot.data!;
+
+            final surahs = allSurahs.where((s) {
+              final now = DateTime.now();
+              final lastReview = s.lastReviewDate;
+
+              bool isToday = lastReview.year == now.year &&
+                  lastReview.month == now.month &&
+                  lastReview.day == now.day;
+
+              if (isToday && s.repetitionCount > 0) {
+                return false;
+              }
+              return true;
+            }).toList();
+
+            if (surahs.isEmpty) {
               return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.library_books_outlined,
-                        size: 80, color: Colors.grey),
-                    SizedBox(height: 10),
-                    Text("لم تقم بإضافة أي  حفظ بعد",
-                        style: TextStyle(color: Colors.grey)),
-                  ],
-                ),
+                child: Text("أتممت وردك اليوم، يا بطل!",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey)),
               );
             }
-
-            final surahs = snapshot.data!;
 
             return ListView.builder(
               padding: const EdgeInsets.all(20),
@@ -82,31 +122,27 @@ class _MySurahsScreenState extends State<MySurahsScreen> {
                         color: Colors.white,
                         shape: BoxShape.circle,
                       ),
-                      child: Text(
-                        "${index + 1}",
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, color: mainColor),
-                      ),
+                      child: Text("${index + 1}",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, color: mainColor)),
                     ),
                     title: Text(
                       surah.name,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          fontSize: 18,
                           color: mainColor),
                     ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        "${surah.verseCount} آيات • الصفحة ${surah.pageNumber}",
-                        style: TextStyle(color: mainColor.withOpacity(0.6)),
-                      ),
+                    subtitle: Text(
+                      "${surah.verseCount} آيات",
+                      style: TextStyle(color: mainColor.withOpacity(0.6)),
                     ),
-                    trailing: const Icon(Icons.arrow_forward_ios,
-                        size: 18, color: mainColor),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.red),
+                      onPressed: () => _deleteItem(surah.id!),
+                    ),
                     onTap: () {
                       int targetSurahNumber = 1;
-
                       for (int i = 1; i <= 114; i++) {
                         if (quran.getSurahNameArabic(i) == surah.name) {
                           targetSurahNumber = i;
@@ -117,10 +153,16 @@ class _MySurahsScreenState extends State<MySurahsScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              SurahDetailScreen(surahNumber: targetSurahNumber),
+                          builder: (context) => SurahDetailScreen(
+                            surahNumber: targetSurahNumber,
+                            isMemorizationMode: true,
+                            surahId: surah.id,
+                            currentRepeats: surah.repetitionCount,
+                          ),
                         ),
-                      );
+                      ).then((_) {
+                        setState(() {});
+                      });
                     },
                   ),
                 );
@@ -128,6 +170,20 @@ class _MySurahsScreenState extends State<MySurahsScreen> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.library_books_outlined, size: 80, color: Colors.grey),
+          SizedBox(height: 10),
+          Text("لا يوجد سور محفوظة حالياً",
+              style: TextStyle(color: Colors.grey)),
+        ],
       ),
     );
   }

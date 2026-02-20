@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:quran/quran.dart' as quran;
+import '../widgets/review_dialog.dart';
 
 class SurahDetailScreen extends StatelessWidget {
   final int surahNumber;
   final int? startAyah;
+  final bool isMemorizationMode;
+
+  final int? surahId;
+  final int? currentRepeats;
 
   const SurahDetailScreen({
     super.key,
     required this.surahNumber,
     this.startAyah,
+    this.isMemorizationMode = false,
+    this.surahId,
+    this.currentRepeats,
   });
 
   @override
@@ -33,6 +41,32 @@ class SurahDetailScreen extends StatelessWidget {
           ),
           centerTitle: true,
         ),
+        floatingActionButton: isMemorizationMode
+            ? FloatingActionButton.extended(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => ReviewDialog(
+                      surahNumber: surahNumber,
+                      surahId: surahId,
+                      currentRepeats: currentRepeats,
+                    ),
+                  ).then((_) {
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    }
+                  });
+                },
+                backgroundColor: mainColor,
+                icon:
+                    const Icon(Icons.check_circle_outline, color: Colors.white),
+                label: const Text(
+                  "أتممت الحفظ",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              )
+            : null,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -43,9 +77,12 @@ class SurahDetailScreen extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: 20),
                     alignment: Alignment.center,
                     child: const Text(
-                      "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+                      "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
                       style: TextStyle(
-                          fontSize: 24, fontFamily: 'Amiri', color: mainColor),
+                        fontSize: 24,
+                        fontFamily: 'Amiri',
+                        color: mainColor,
+                      ),
                     ),
                   ),
                 RichText(
@@ -62,6 +99,7 @@ class SurahDetailScreen extends StatelessWidget {
                               fontSize: 22,
                               color: Colors.black87,
                               height: 1.8,
+                              fontFamily: 'Amiri',
                             ),
                           ),
                           TextSpan(
@@ -77,6 +115,7 @@ class SurahDetailScreen extends StatelessWidget {
                     }),
                   ),
                 ),
+                const SizedBox(height: 80),
               ],
             ),
           ),

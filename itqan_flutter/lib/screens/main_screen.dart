@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'add_surah_screen.dart';
 import 'quran_index_screen.dart';
+import 'settings_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -16,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     const HomeScreen(),
     const QuranIndexScreen(),
-    const Center(child: Text("صفحة الإحصائيات")),
+    const SettingsScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -59,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "الرئيسية"),
           BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "المصحف"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart), label: "الإحصائيات"),
+              icon: Icon(Icons.settings), label: "الإعدادات"),
         ],
       ),
     );

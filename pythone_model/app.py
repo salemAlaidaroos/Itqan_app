@@ -5,7 +5,7 @@ from data.surah_data import surah_difficulty_map
 
 app = Flask(__name__)
 
-with open('quran_ai_model.pkl', 'rb') as f:
+with open('pythone_model/quran_ai_model.pkl', 'rb') as f:
     artifacts = pickle.load(f)
     model = artifacts['model']
     feature_names = artifacts['features']
@@ -30,7 +30,7 @@ def predict_risk():
 
     prob = model.predict_proba(input_data)
     
-    risk_percentage = float(prob[0][1]) * 100 
+    risk_percentage = float(prob[0][0]) * 100 
     
     easy_surahs = ['الفيل','الفاتحة', 'الناس', 'الفلق', 'الإخلاص', 'الكوثر', 'النصر', 'قريش', 'العصر', 'المسد','الكافرون','الزلزلة']
     

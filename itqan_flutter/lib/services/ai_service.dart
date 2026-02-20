@@ -31,7 +31,7 @@ class AiService {
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      return jsonResponse['risk_percentage'].toDouble();
+      return (jsonResponse['risk_percentage'].toDouble()) / 100.0;
     } else {
       print("Server Error: ${response.body}");
       return 0.0;

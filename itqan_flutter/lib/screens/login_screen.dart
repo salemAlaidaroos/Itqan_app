@@ -3,6 +3,7 @@ import '../services/database_service.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/social_icon.dart';
 import 'signup_screen.dart';
+import 'main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,9 +22,12 @@ class _LoginScreenState extends State<LoginScreen> {
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
+
     if (mounted) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("تم تسجيل الدخول بنجاح")));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MainScreen()),
+      );
     }
   }
 
@@ -41,7 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               const SizedBox(height: 80),
-
               Center(
                 child: Column(
                   children: [
@@ -56,9 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 40),
-
               const Text(
                 "تسجيل الدخول",
                 style: TextStyle(
@@ -66,10 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontWeight: FontWeight.bold,
                     color: mainColor),
               ),
-
               const SizedBox(height: 30),
-
-              // حقول الإدخال
               CustomTextField(
                   hint: "البريد الإلكتروني",
                   icon: Icons.person_outline,
@@ -80,9 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   icon: Icons.lock_outline,
                   controller: _passwordController,
                   isPassword: true),
-
               const SizedBox(height: 25),
-
               SizedBox(
                 width: double.infinity,
                 height: 55,
@@ -103,9 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 40),
-
               const Center(
                 child: Text(
                   "أو سجل الدخول باستخدام",
@@ -113,9 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextStyle(color: mainColor, fontWeight: FontWeight.bold),
                 ),
               ),
-
               const SizedBox(height: 20),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -129,9 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       label: "in", color: Colors.blueAccent, onTap: () {}),
                 ],
               ),
-
               const SizedBox(height: 60),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

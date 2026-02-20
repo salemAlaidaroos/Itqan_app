@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:itqan_flutter/screens/my_surahs_screen.dart';
+import 'package:itqan_flutter/screens/statistics_screen.dart';
 import '../widgets/stair_card.dart';
+import 'smart_review_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -33,7 +35,13 @@ class HomeScreen extends StatelessWidget {
             icon: Icons.psychology,
             gradientColors: const [Color(0xFF1A3A6A), Color(0xFF1C4D8D)],
             widthPercent: 1.0,
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const SmartReviewScreen()),
+              );
+            },
           ),
         ),
         Expanded(
@@ -61,7 +69,13 @@ class HomeScreen extends StatelessWidget {
             gradientColors: const [Color(0xFF4988C4), Color(0xFFBDE8F5)],
             widthPercent: 0.84,
             textColor: const Color(0xFF0F2854),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const StatisticsScreen()),
+              );
+            },
           ),
         ),
         const SizedBox(height: 80),

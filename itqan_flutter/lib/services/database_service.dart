@@ -43,13 +43,13 @@ class DatabaseService {
     return surahList;
   }
 
-  Future<void> addSurah({
+  Future<int> addSurah({
     required int surahNumber,
     required int startVerse,
     required int endVerse,
   }) async {
     final user = supabase.auth.currentUser;
-    if (user == null) return;
+    if (user == null) return 0;
 
     int totalVersesToMemorize = endVerse - startVerse + 1;
 
@@ -65,7 +65,9 @@ class DatabaseService {
       'created_at': DateTime.now().toIso8601String(),
     };
 
-    await supabase.from("surahs").insert(dataToSend);
+    final response =
+        await supabase.from("surahs").insert(dataToSend).select('id').single();
+    return response['id'] as int;
   }
 
   Future<void> deleteSurah({required int id}) async {

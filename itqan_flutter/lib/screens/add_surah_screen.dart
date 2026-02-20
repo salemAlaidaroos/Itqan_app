@@ -14,8 +14,9 @@ class _AddSurahScreenState extends State<AddSurahScreen> {
   int _selectedSurah = 1;
   int _startAyah = 1;
   int _endAyah = 7;
-
   final _db = DatabaseService();
+
+  bool _isSaving = false;
 
   void _updateAyahs() {
     setState(() {
@@ -25,9 +26,13 @@ class _AddSurahScreenState extends State<AddSurahScreen> {
   }
 
   void _save(bool startNow) async {
-    if (_startAyah > _endAyah) return;
+    if (_isSaving) return;
 
-    await _db.addSurah(
+    setState(() {
+      _isSaving = true;
+    });
+
+    int newSurahId = await _db.addSurah(
       surahNumber: _selectedSurah,
       startVerse: _startAyah,
       endVerse: _endAyah,
@@ -39,7 +44,19 @@ class _AddSurahScreenState extends State<AddSurahScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (_) => SurahDetailScreen(surahNumber: _selectedSurah)),
+          builder: (_) => SurahDetailScreen(
+            surahNumber: _selectedSurah,
+            isMemorizationMode: true,
+            surahId: newSurahId,
+            currentRepeats: 0,
+          ),
+        ),
+      );
+    } else {
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("تمت إضافة الورد للجدول بنجاح ")),
       );
     }
   }
@@ -57,10 +74,11 @@ class _AddSurahScreenState extends State<AddSurahScreen> {
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios, color: mainColor),
-            onPressed: () => Navigator.pop(context),
+            onPressed: _isSaving ? null : () => Navigator.pop(context),
           ),
           title: const Text("حفظ ورد جديد",
               style: TextStyle(color: mainColor, fontWeight: FontWeight.bold)),
+          centerTitle: true,
         ),
         body: Padding(
           padding: const EdgeInsets.all(25.0),
@@ -72,10 +90,14 @@ class _AddSurahScreenState extends State<AddSurahScreen> {
                 value: _selectedSurah,
                 maxItems: 114,
                 label: (val) => "${val}. ${quran.getSurahNameArabic(val)}",
-                onChanged: (val) {
-                  _selectedSurah = val!;
-                  _updateAyahs();
-                },
+                onChanged: _isSaving
+                    ? null
+                    : (val) {
+                        setState(() {
+                          _selectedSurah = val!;
+                          _updateAyahs();
+                        });
+                      },
               ),
               const SizedBox(height: 20),
               Row(
@@ -90,7 +112,9 @@ class _AddSurahScreenState extends State<AddSurahScreen> {
                           value: _startAyah,
                           maxItems: quran.getVerseCount(_selectedSurah),
                           label: (val) => "$val",
-                          onChanged: (val) => setState(() => _startAyah = val!),
+                          onChanged: _isSaving
+                              ? null
+                              : (val) => setState(() => _startAyah = val!),
                         ),
                       ],
                     ),
@@ -106,7 +130,9 @@ class _AddSurahScreenState extends State<AddSurahScreen> {
                           value: _endAyah,
                           maxItems: quran.getVerseCount(_selectedSurah),
                           label: (val) => "$val",
-                          onChanged: (val) => setState(() => _endAyah = val!),
+                          onChanged: _isSaving
+                              ? null
+                              : (val) => setState(() => _endAyah = val!),
                         ),
                       ],
                     ),
@@ -134,26 +160,39 @@ class _AddSurahScreenState extends State<AddSurahScreen> {
               ),
               const Spacer(),
               ElevatedButton(
-                onPressed: () => _save(true),
+                onPressed: _isSaving ? null : () => _save(true),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: mainColor,
                   padding: const EdgeInsets.symmetric(vertical: 15),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text("ابدأ الحفظ الآن",
-                    style: TextStyle(fontSize: 18, color: Colors.white)),
+                child: _isSaving
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                            color: Colors.white, strokeWidth: 2))
+                    : const Text("ابدأ الحفظ الآن",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 10),
               OutlinedButton(
-                onPressed: () => _save(false),
+                onPressed: _isSaving ? null : () => _save(false),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 15),
+                  side: const BorderSide(color: mainColor),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                 ),
                 child: const Text("إضافة للجدول",
-                    style: TextStyle(fontSize: 18, color: mainColor)),
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: mainColor,
+                        fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -166,7 +205,7 @@ class _AddSurahScreenState extends State<AddSurahScreen> {
     required int value,
     required int maxItems,
     required String Function(int) label,
-    required void Function(int?) onChanged,
+    required void Function(int?)? onChanged,
   }) {
     return Container(
       margin: const EdgeInsets.only(top: 5),

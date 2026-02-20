@@ -41,8 +41,6 @@ class QuranIndexScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         fontSize: 12)),
               ),
-
-              // اسم السورة
               title: Text(
                 "سورة ${quran.getSurahNameArabic(surahNum)}",
                 style: const TextStyle(
@@ -50,18 +48,19 @@ class QuranIndexScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: mainColor),
               ),
-
               subtitle: Text(
                 revelationType,
                 style: const TextStyle(color: Colors.grey, fontSize: 14),
               ),
-
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          SurahDetailScreen(surahNumber: surahNum)),
+                    builder: (context) => SurahDetailScreen(
+                      surahNumber: surahNum,
+                      isMemorizationMode: false, //
+                    ),
+                  ),
                 );
               },
             ),
