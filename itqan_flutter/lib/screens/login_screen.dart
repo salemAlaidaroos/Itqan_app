@@ -44,22 +44,16 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const SizedBox(height: 80),
+              const SizedBox(height: 100),
               Center(
-                child: Column(
-                  children: [
-                    const Icon(Icons.menu_book, size: 60, color: mainColor),
-                    const Text(
-                      "Itqan",
-                      style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: mainColor),
-                    ),
-                  ],
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  height: 200,
+                  width: 250,
+                  fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
               const Text(
                 "تسجيل الدخول",
                 style: TextStyle(

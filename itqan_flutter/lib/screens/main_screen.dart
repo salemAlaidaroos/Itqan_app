@@ -33,10 +33,23 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text("Itqan",
-            style: TextStyle(color: mainColor, fontWeight: FontWeight.bold)),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/upbar_word.png',
+              height: 100,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+          ],
+        ),
         centerTitle: true,
       ),
       body: _pages[_selectedIndex],

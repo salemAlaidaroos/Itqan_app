@@ -50,25 +50,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(30.0),
+          padding: const EdgeInsets.only(
+              top: 0, left: 30.0, right: 30.0, bottom: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Center(
-                child: Column(
-                  children: [
-                    const Icon(Icons.menu_book, size: 55, color: mainColor),
-                    const Text(
-                      "Itqan",
-                      style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: mainColor),
-                    ),
-                  ],
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  height: 200,
+                  width: 250,
+                  fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 0),
               const Text(
                 "إنشاء حساب",
                 style: TextStyle(
@@ -76,29 +71,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     fontWeight: FontWeight.bold,
                     color: mainColor),
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 15),
               CustomTextField(
                   hint: "الاسم الكامل",
                   icon: Icons.person_outline,
                   controller: _nameController),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
               CustomTextField(
                   hint: "البريد الإلكتروني",
                   icon: Icons.email_outlined,
                   controller: _emailController),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
               CustomTextField(
                   hint: "كلمة المرور",
                   icon: Icons.lock_outline,
                   controller: _passwordController,
                   isPassword: true),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
               CustomTextField(
                   hint: "تأكيد كلمة المرور",
                   icon: Icons.lock_outline,
                   controller: _confirmPasswordController,
                   isPassword: true),
-              const SizedBox(height: 35),
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 height: 55,
@@ -118,7 +113,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

@@ -63,6 +63,8 @@ class DatabaseService {
       'repetition_count': 0,
       'last_review_date': DateTime.now().toIso8601String(),
       'created_at': DateTime.now().toIso8601String(),
+      'start_verse': startVerse,
+      'end_verse': endVerse,
     };
 
     final response =
@@ -72,6 +74,15 @@ class DatabaseService {
 
   Future<void> deleteSurah({required int id}) async {
     await supabase.from("surahs").delete().eq('id', id);
+  }
+
+  Future<void> updateRiskScoreOnly({
+    required int id,
+    required double newRisk,
+  }) async {
+    await supabase.from("surahs").update({
+      'risk_score': newRisk,
+    }).eq('id', id);
   }
 
   Future<void> updateSurahAfterReview({

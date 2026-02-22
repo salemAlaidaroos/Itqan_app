@@ -6,7 +6,6 @@ class SurahDetailScreen extends StatelessWidget {
   final int surahNumber;
   final int? startAyah;
   final bool isMemorizationMode;
-
   final int? surahId;
   final int? currentRepeats;
 
@@ -18,6 +17,18 @@ class SurahDetailScreen extends StatelessWidget {
     this.surahId,
     this.currentRepeats,
   });
+
+  String _getSurahText() {
+    String fullText = "";
+    int totalVerses = quran.getVerseCount(surahNumber);
+    int start = startAyah ?? 1;
+
+    for (int i = start; i <= totalVerses; i++) {
+      fullText += "${quran.getVerse(surahNumber, i)} ﴿$i﴾ ";
+    }
+
+    return fullText;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,19 +54,21 @@ class SurahDetailScreen extends StatelessWidget {
         ),
         floatingActionButton: isMemorizationMode
             ? FloatingActionButton.extended(
-                onPressed: () {
-                  showDialog(
+                onPressed: () async {
+                  final result = await showDialog<bool>(
                     context: context,
                     builder: (context) => ReviewDialog(
                       surahNumber: surahNumber,
                       surahId: surahId,
                       currentRepeats: currentRepeats,
                     ),
-                  ).then((_) {
-                    if (Navigator.canPop(context)) {
+                  );
+
+                  if (result == true) {
+                    if (context.mounted) {
                       Navigator.pop(context);
                     }
-                  });
+                  }
                 },
                 backgroundColor: mainColor,
                 icon:
@@ -72,47 +85,26 @@ class SurahDetailScreen extends StatelessWidget {
             padding: const EdgeInsets.all(15.0),
             child: ListView(
               children: [
-                if (surahNumber != 1 && surahNumber != 9)
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 20),
-                    alignment: Alignment.center,
-                    child: const Text(
-                      "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontFamily: 'Amiri',
-                        color: mainColor,
-                      ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontFamily: 'Amiri',
+                      color: mainColor,
                     ),
                   ),
-                RichText(
+                ),
+                Text(
+                  _getSurahText(),
                   textAlign: TextAlign.justify,
-                  text: TextSpan(
-                    children: List.generate(quran.getVerseCount(surahNumber),
-                        (index) {
-                      int verseNum = index + 1;
-                      return TextSpan(
-                        children: [
-                          TextSpan(
-                            text: quran.getVerse(surahNumber, verseNum),
-                            style: const TextStyle(
-                              fontSize: 22,
-                              color: Colors.black87,
-                              height: 1.8,
-                              fontFamily: 'Amiri',
-                            ),
-                          ),
-                          TextSpan(
-                            text: " ﴿$verseNum﴾ ",
-                            style: const TextStyle(
-                              color: mainColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
+                  style: const TextStyle(
+                    fontSize: 22,
+                    color: Colors.black87,
+                    height: 1.8,
+                    fontFamily: 'Amiri',
                   ),
                 ),
                 const SizedBox(height: 80),

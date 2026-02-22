@@ -38,7 +38,7 @@ class _ReviewDialogState extends State<ReviewDialog> {
         surfaceTintColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Center(
-          child: Text("تقييم الحفظ ",
+          child: Text("تقييم الحفظ",
               style: TextStyle(fontWeight: FontWeight.bold, color: mainColor)),
         ),
         content: Column(
@@ -102,7 +102,7 @@ class _ReviewDialogState extends State<ReviewDialog> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(context, false),
             child: const Text("إلغاء", style: TextStyle(color: Colors.grey)),
           ),
           ElevatedButton(
@@ -110,7 +110,7 @@ class _ReviewDialogState extends State<ReviewDialog> {
                 ? null
                 : () async {
                     if (widget.surahId == null) {
-                      Navigator.pop(context);
+                      Navigator.pop(context, false);
                       return;
                     }
 
@@ -134,25 +134,17 @@ class _ReviewDialogState extends State<ReviewDialog> {
                         currentRepeats: surahModel.repetitionCount,
                         newRisk: predictedRisk,
                       );
-
                       if (mounted) {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                "تم الربط بالذكاء بنجاح!  نسبة نسيانك: ${(predictedRisk * 100).toInt()}%"),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
+                        Navigator.pop(context, true);
                       }
-                    } catch (e) {
+                    } catch (error) {
                       setState(() => _isLoading = false);
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text("خطأ في الاتصال بالذكاء: $e"),
-                              backgroundColor: Colors.red),
+                          const SnackBar(
+                            content: Text("تعذر الاتصال، تأكد من الإنترنت!"),
+                            backgroundColor: Colors.red,
+                          ),
                         );
                       }
                     }
@@ -177,22 +169,18 @@ class _ReviewDialogState extends State<ReviewDialog> {
 
   Widget _buildFaceOption(int value, IconData icon, Color color) {
     bool isSelected = _selectedQuality == value;
-    return GestureDetector(
-      onTap: () => setState(() => _selectedQuality = value),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : Colors.transparent,
-          shape: BoxShape.circle,
-          border: isSelected ? Border.all(color: color, width: 2) : null,
-        ),
-        child: Icon(
-          icon,
-          size: isSelected ? 35 : 30,
-          color: isSelected ? color : Colors.grey,
-        ),
+
+    return IconButton(
+      icon: Icon(
+        icon,
+        size: isSelected ? 35 : 30,
+        color: isSelected ? color : Colors.grey,
       ),
+      onPressed: () {
+        setState(() {
+          _selectedQuality = value;
+        });
+      },
     );
   }
 }

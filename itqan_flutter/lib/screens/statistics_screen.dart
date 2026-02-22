@@ -45,22 +45,28 @@ class StatisticsScreen extends StatelessWidget {
             final memorizedSurahs =
                 allSurahs.where((s) => s.repetitionCount > 0).toList();
 
-            int totalVerses =
-                memorizedSurahs.fold(0, (sum, s) => sum + s.verseCount);
-            int totalMinutes =
-                memorizedSurahs.fold(0, (sum, s) => sum + s.lastTimeTaken);
+            int totalVerses = 0;
+            int totalMinutes = 0;
+            double totalRisk = 0.0;
 
-            double avgRisk = memorizedSurahs.isEmpty
-                ? 0
-                : memorizedSurahs.fold(0.0, (sum, s) => sum + s.riskScore) /
-                    memorizedSurahs.length;
-            int memoryStrength =
-                memorizedSurahs.isEmpty ? 0 : ((1.0 - avgRisk) * 100).toInt();
+            for (var surah in memorizedSurahs) {
+              totalVerses += surah.verseCount;
+              totalMinutes += surah.lastTimeTaken;
+              totalRisk += surah.riskScore;
+            }
+
+            double avgRisk = 0.0;
+            int memoryStrength = 0;
+
+            if (memorizedSurahs.isNotEmpty) {
+              avgRisk = totalRisk / memorizedSurahs.length;
+              memoryStrength = ((1.0 - avgRisk) * 100).toInt();
+            }
 
             return ListView(
               padding: const EdgeInsets.all(20),
               children: [
-                _buildHeroCard(
+                _buildBigCard(
                   height: screenHeight * 0.20,
                   title: "قوة الذاكرة الحالية",
                   value: "$memoryStrength%",
@@ -74,7 +80,7 @@ class StatisticsScreen extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildStatCard(
+                      child: _buildSmallCard(
                         height: screenHeight * 0.22,
                         title: "سور منجزة",
                         value: "${memorizedSurahs.length}",
@@ -86,7 +92,7 @@ class StatisticsScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 20),
                     Expanded(
-                      child: _buildStatCard(
+                      child: _buildSmallCard(
                         height: screenHeight * 0.22,
                         title: "آيات محفوظة",
                         value: "$totalVerses",
@@ -99,7 +105,7 @@ class StatisticsScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                _buildHeroCard(
+                _buildBigCard(
                   height: screenHeight * 0.20,
                   title: "الوقت مع القرآن",
                   value: "$totalMinutes",
@@ -127,7 +133,7 @@ class StatisticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeroCard(
+  Widget _buildBigCard(
       {required double height,
       required String title,
       required String value,
@@ -194,7 +200,7 @@ class StatisticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(
+  Widget _buildSmallCard(
       {required double height,
       required String title,
       required String value,

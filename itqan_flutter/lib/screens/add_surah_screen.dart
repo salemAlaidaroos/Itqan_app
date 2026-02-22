@@ -56,7 +56,7 @@ class _AddSurahScreenState extends State<AddSurahScreen> {
       Navigator.pop(context);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("تمت إضافة الورد للجدول بنجاح ")),
+        const SnackBar(content: Text("تمت إضافة الجفظ للجدول بنجاح ")),
       );
     }
   }
@@ -76,125 +76,133 @@ class _AddSurahScreenState extends State<AddSurahScreen> {
             icon: const Icon(Icons.arrow_back_ios, color: mainColor),
             onPressed: _isSaving ? null : () => Navigator.pop(context),
           ),
-          title: const Text("حفظ ورد جديد",
+          title: const Text("اضافة حفظ جديد",
               style: TextStyle(color: mainColor, fontWeight: FontWeight.bold)),
           centerTitle: true,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text("اختر السورة", style: TextStyle(color: Colors.grey)),
-              _simpleDropdown(
-                value: _selectedSurah,
-                maxItems: 114,
-                label: (val) => "${val}. ${quran.getSurahNameArabic(val)}",
-                onChanged: _isSaving
-                    ? null
-                    : (val) {
-                        setState(() {
-                          _selectedSurah = val!;
-                          _updateAyahs();
-                        });
-                      },
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("من آية",
-                            style: TextStyle(color: Colors.grey)),
-                        _simpleDropdown(
-                          value: _startAyah,
-                          maxItems: quran.getVerseCount(_selectedSurah),
-                          label: (val) => "$val",
-                          onChanged: _isSaving
-                              ? null
-                              : (val) => setState(() => _startAyah = val!),
-                        ),
-                      ],
-                    ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.15),
+                        spreadRadius: 5,
+                        blurRadius: 15,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 15),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("إلى آية",
-                            style: TextStyle(color: Colors.grey)),
-                        _simpleDropdown(
-                          value: _endAyah,
-                          maxItems: quran.getVerseCount(_selectedSurah),
-                          label: (val) => "$val",
-                          onChanged: _isSaving
-                              ? null
-                              : (val) => setState(() => _endAyah = val!),
-                        ),
-                      ],
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("اختر السورة",
+                          style: TextStyle(color: Colors.grey)),
+                      _simpleDropdown(
+                        value: _selectedSurah,
+                        maxItems: 114,
+                        label: (val) =>
+                            "${val}. ${quran.getSurahNameArabic(val)}",
+                        onChanged: _isSaving
+                            ? null
+                            : (val) {
+                                setState(() {
+                                  _selectedSurah = val!;
+                                  _updateAyahs();
+                                });
+                              },
+                      ),
+                      const SizedBox(height: 25),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("من آية",
+                                    style: TextStyle(color: Colors.grey)),
+                                _simpleDropdown(
+                                  value: _startAyah,
+                                  maxItems: quran.getVerseCount(_selectedSurah),
+                                  label: (val) => "$val",
+                                  onChanged: _isSaving
+                                      ? null
+                                      : (val) =>
+                                          setState(() => _startAyah = val!),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("إلى آية",
+                                    style: TextStyle(color: Colors.grey)),
+                                _simpleDropdown(
+                                  value: _endAyah,
+                                  maxItems: quran.getVerseCount(_selectedSurah),
+                                  label: (val) => "$val",
+                                  onChanged: _isSaving
+                                      ? null
+                                      : (val) =>
+                                          setState(() => _endAyah = val!),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 30),
-              Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFBDE8F5).withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(15),
                 ),
-                child: Column(
-                  children: [
-                    Text("عدد الآيات: ${_endAyah - _startAyah + 1}",
-                        style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: mainColor)),
-                    Text("سورة ${quran.getSurahNameArabic(_selectedSurah)}",
-                        style: const TextStyle(color: mainColor)),
-                  ],
+                const SizedBox(height: 50),
+                ElevatedButton(
+                  onPressed: _isSaving ? null : () => _save(true),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: mainColor,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: _isSaving
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 2))
+                      : const Text("ابدأ الحفظ الآن",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
                 ),
-              ),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: _isSaving ? null : () => _save(true),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: mainColor,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                const SizedBox(height: 15),
+                OutlinedButton(
+                  onPressed: _isSaving ? null : () => _save(false),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    side: const BorderSide(color: mainColor),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: const Text("إضافة للجدول",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: mainColor,
+                          fontWeight: FontWeight.bold)),
                 ),
-                child: _isSaving
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                            color: Colors.white, strokeWidth: 2))
-                    : const Text("ابدأ الحفظ الآن",
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 10),
-              OutlinedButton(
-                onPressed: _isSaving ? null : () => _save(false),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  side: const BorderSide(color: mainColor),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-                child: const Text("إضافة للجدول",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: mainColor,
-                        fontWeight: FontWeight.bold)),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -208,16 +216,22 @@ class _AddSurahScreenState extends State<AddSurahScreen> {
     required void Function(int?)? onChanged,
   }) {
     return Container(
-      margin: const EdgeInsets.only(top: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(10),
+        color: const Color(0xFFBDE8F5).withOpacity(0.4),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           value: value,
           isExpanded: true,
+          iconSize: 28,
+          style: const TextStyle(
+            fontSize: 18,
+            color: Color(0xFF0F2854),
+            fontWeight: FontWeight.bold,
+          ),
           items: List.generate(maxItems, (index) {
             int num = index + 1;
             return DropdownMenuItem(value: num, child: Text(label(num)));

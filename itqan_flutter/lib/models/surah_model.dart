@@ -10,6 +10,8 @@ class SurahModel {
   final int initialDifficulty;
   final int lastTimeTaken;
   final double riskScore;
+  final int startVerse;
+  final int endVerse;
 
   SurahModel({
     this.id,
@@ -23,6 +25,8 @@ class SurahModel {
     this.initialDifficulty = 3,
     this.lastTimeTaken = 0,
     this.riskScore = 0.0,
+    required this.startVerse,
+    required this.endVerse,
   });
 
   factory SurahModel.fromMap(Map<String, dynamic> map) {
@@ -38,6 +42,8 @@ class SurahModel {
       initialDifficulty: map['initial_difficulty'] ?? 3,
       lastTimeTaken: map['last_time_taken'] ?? 0,
       riskScore: (map['risk_score'] ?? 0.0).toDouble(),
+      startVerse: map['start_verse'] ?? 1,
+      endVerse: map['end_verse'] ?? map['verse_count'] ?? 1,
     );
   }
 
@@ -53,6 +59,8 @@ class SurahModel {
       'initial_difficulty': initialDifficulty,
       'last_time_taken': lastTimeTaken,
       'risk_score': riskScore,
+      'start_verse': startVerse,
+      'end_verse': endVerse,
     };
   }
 }
