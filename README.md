@@ -164,6 +164,120 @@
 | `quran_ai_model.pkl` | النموذج النهائي المدرب والمصدر جاهزاً للاستخدام الفوري. |
 
 ---
+## 📸 لقطات من التطبيق (App Screenshots)
 
-## لقطات شاشة التطبيق
-يعرض ما يلي رحلة المستخدم والواجهات التي قمت بتطويرها للتطبيق
+### 1. الوصول والمصادقة (Access & Authentication)
+تشمل هذه المجموعة شاشات البداية التي تضمن أمان بيانات المستخدم ومزامنته السحابية عبر **Supabase**.
+* **الشاشات:** (تسجيل الدخول، إنشاء حساب).
+
+<table dir="rtl" align="right">
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/77c765e2-d43d-4176-a4a3-757b49e25830" width="350" /></td>
+    <td><img src="https://github.com/user-attachments/assets/7fd30262-71db-4681-bbf8-85ff347246f6" width="350" /></td>
+  </tr>
+</table>
+
+<br clear="right"/><br/>
+
+---
+### 2 واجهة التحكم والتنقل (Dashboard & Navigation)
+تمثل قلب التطبيق حيث يمكن للمستخدم التنقل بين الوظائف الأساسية باستخدام البار السفلي العصري (Pill Navigation).
+* **الشاشات:** (الشاشة الرئيسية، شاشة المصحف الشريف، شاشة الإعدادات).
+
+<table dir="rtl" align="right">
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/d15a8968-e8cb-4516-9a68-68eb0af824fd" width="350" /></td>
+    <td><img src="https://github.com/user-attachments/assets/46a1beae-e40f-42e1-a903-c4bb269f441b" width="350" /></td>
+    <td><img src="https://github.com/user-attachments/assets/8220d022-fb5e-4126-a54b-9ce107c2ee9f" width="350" /></td>
+  </tr>
+</table>
+
+<br clear="right"/><br/>
+
+---
+
+### 3. إدارة الحفظ والمراجعة (Memorization Management)
+تظهر هنا قوة التنظيم، حيث تتيح هذه الشاشات للمستخدم تخصيص أوراده بدقة (من آية إلى آية) وإدارة قائمته المجدولة.
+* **الشاشات:** (إضافة حفظ جديد، قائمة الحفظ المجدول).
+
+<table dir="rtl" align="right">
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/ad4f4ebf-9b94-4e88-8ab8-6a93e3fc628d" width="350" /></td>
+    <td><img src="https://github.com/user-attachments/assets/18c7dbf9-17f9-45b2-8e22-d64b25786366" width="350" /></td>
+  </tr>
+</table>
+
+<br clear="right"/><br/>
+
+---
+
+### 4. تجربة القراءة والتقييم الذكي (Reading & AI Evaluation)
+المرحلة التفاعلية حيث يقرأ المستخدم وردَه، ثم يغذي المودل ببيانات الأداء (الوقت والمستوى) ليتم تحليلها وعرضها في الإحصائيات.
+* **الشاشات:** (عرض السورة، دايلوج التقييم، شاشة الإحصائيات).
+
+<table dir="rtl" align="right">
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/3318cf91-b22d-433f-a828-3e0ce5a2b344" width="350" /></td>
+    <td><img src="https://github.com/user-attachments/assets/4fa9e812-1a4f-411b-a1dd-a60d9ae0dc7b" width="350" /></td>
+    <td><img src="https://github.com/user-attachments/assets/608f2a31-7eb2-44a4-a77b-43fd6878ec67" width="350" /></td>
+  </tr>
+</table>
+
+<br clear="right"/><br/>
+
+---
+
+
+### 2. محرك المراجعة الذكية (AI Smart Review Engine)
+هنا يكمن ذكاء "إتقان"، حيث تعرض هذه الشاشة الأوراد مع نسبة "خطر النسيان" المتوقعة عبر نموذج الذكاء الاصطناعي بناءً على منحنى التذكر الشخصي.
+* **الشاشات:** (المراجعة الذكية المدعومة بالذكاء الاصطناعي).
+
+<table dir="rtl" align="right">
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/4b235b35-c579-40fd-b82e-212809be592d" width="350" /></td>
+  </tr>
+</table>
+
+<br clear="right"/><br/>
+
+---
+
+
+###  هيكلية قاعدة البيانات (Database Schema)
+يعتمد التطبيق على قاعدة بيانات **Supabase ** لإدارة البيانات حيث يتم ربط سجلات الحفظ بكل مستخدم لضمان خصوصية البيانات ومزامنتها. تم تصميم جدول `surahs` ليحتوي على كافة المتغيرات التي يحتاجها مودل الذكاء الاصطناعي لحساب التوقعات بدقة.
+
+<p align="right">
+  <img src="https://github.com/user-attachments/assets/fa503229-c098-45a4-b336-693584bd4f21" width="700" title="Supabase Schema">
+</p>
+
+---
+
+
+
+##  البدء بالعمل (Getting Started)
+
+للحصول على نسخة محلية من المشروع، اتبع الخطوات التالية:
+
+### تحميل المشروع:
+```bash
+git clone [https://github.com/your-username/itqan-app.git](https://github.com/your-username/itqan-app.git)
+```
+
+```bash
+flutter pub get
+```
+###  إعداد البيئة (Configuration)
+- قم بإنشاء مشروع جديد على منصة **Supabase**.
+- أنشئ جدول `surahs` كما هو موضح في قسم هيكلية قاعدة البيانات (Database Schema).
+- أضف روابط الاتصال الخاصة بك (`URL` و `Anon Key`) في ملف الـ `lib/main.dart`.
+
+###  تشغيل خادم الذكاء الاصطناعي (AI Server)
+يعتمد التطبيق على خادم **Flask** لمعالجة طلبات التنبؤ، تأكد من تشغيل الخادم قبل البدء:
+
+---
+
+##  المطور
+**سالم زين العيدروس**
+
+مهتم بتطوير تطبيقات Flutter وعلوم البيانات والذكاء الاصناعي.
+
